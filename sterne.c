@@ -1,5 +1,11 @@
 #include <GLFW/glfw3.h>
 
+typedef struct {
+  GLfloat x;
+  GLfloat y;
+  GLfloat z;
+} Coord;
+
 int main() {
     if (!glfwInit())
         return 1;
