@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <GLFW/glfw3.h>
 
 typedef struct {
@@ -5,6 +6,17 @@ typedef struct {
   GLfloat y;
   GLfloat z;
 } Coord;
+
+GLfloat rnd() {
+    return (GLfloat)rand() / (GLfloat)RAND_MAX;
+}
+
+Coord* createStars(int n, GLfloat r, GLfloat m) {
+    Coord* result = malloc(n*sizeof(Coord));
+    for (int i=0; i<n; i++)
+        result[i] = (Coord){r*(2.0*rnd()-1.0), r*(2.0*rnd()-1.0), m*rnd()};
+    return result;
+}
 
 int main() {
     if (!glfwInit())
