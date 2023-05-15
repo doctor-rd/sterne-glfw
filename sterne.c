@@ -40,13 +40,25 @@ const char* geometry_shader =
 "#version 400\n"
 "layout(points) in;"
 "layout(line_strip, max_vertices = 2) out;"
+"out float vz;"
 "uniform float speed;"
 "void main() {"
 "  gl_Position = gl_in[0].gl_Position;"
+"  vz = gl_Position.z;"
 "  EmitVertex();"
 "  gl_Position = gl_in[0].gl_Position + vec4(0.0, 0.0, -0.1*speed, 2.0*speed);"
+"  vz = gl_Position.z;"
 "  EmitVertex();"
 "  EndPrimitive();"
+"}";
+
+const char* fragment_shader =
+"#version 400\n"
+"in float vz;"
+"out vec4 frag_colour;"
+"void main() {"
+"  float vBright = 1.2-(-10.0*vz)/4.5;"
+"  frag_colour = vec4(vBright, vBright, vBright, 1.0);"
 "}";
 
 int main() {
@@ -66,7 +78,11 @@ int main() {
     GLuint gs = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(gs, 1, &geometry_shader, NULL);
     glCompileShader(gs);
+    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs, 1, &fragment_shader, NULL);
+    glCompileShader(fs);
     GLuint shader_programme = glCreateProgram();
+    glAttachShader(shader_programme, fs);
     glAttachShader(shader_programme, vs);
     glAttachShader(shader_programme, gs);
     glLinkProgram(shader_programme);
@@ -91,6 +107,8 @@ int main() {
         GLint loc_speed = glGetUniformLocation(shader_programme, "speed");
         glUniform1f(loc_speed, speed);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
         glDrawArrays(GL_POINTS, 0, n_stars);
         glDisableVertexAttribArray(0);
         glfwSwapBuffers(window);
