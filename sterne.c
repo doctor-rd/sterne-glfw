@@ -36,6 +36,19 @@ const char* vertex_shader =
 "  gl_Position = vec4(coord.x, coord.y, -0.1*coord.z, 2.0*coord.z-1.0);"
 "}";
 
+const char* geometry_shader =
+"#version 400\n"
+"layout(points) in;"
+"layout(line_strip, max_vertices = 2) out;"
+"uniform float speed;"
+"void main() {"
+"  gl_Position = gl_in[0].gl_Position;"
+"  EmitVertex();"
+"  gl_Position = gl_in[0].gl_Position + vec4(0.0, 0.0, -0.1*speed, 2.0*speed);"
+"  EmitVertex();"
+"  EndPrimitive();"
+"}";
+
 int main() {
     if (!glfwInit())
         return 1;
@@ -50,8 +63,12 @@ int main() {
     GLuint vs = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vs, 1, &vertex_shader, NULL);
     glCompileShader(vs);
+    GLuint gs = glCreateShader(GL_GEOMETRY_SHADER);
+    glShaderSource(gs, 1, &geometry_shader, NULL);
+    glCompileShader(gs);
     GLuint shader_programme = glCreateProgram();
     glAttachShader(shader_programme, vs);
+    glAttachShader(shader_programme, gs);
     glLinkProgram(shader_programme);
 
     const int n_stars = 5000;
@@ -71,6 +88,8 @@ int main() {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
         glUseProgram(shader_programme);
+        GLint loc_speed = glGetUniformLocation(shader_programme, "speed");
+        glUniform1f(loc_speed, speed);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDrawArrays(GL_POINTS, 0, n_stars);
         glDisableVertexAttribArray(0);
