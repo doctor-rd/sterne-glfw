@@ -19,6 +19,16 @@ Coord* createStars(int n, GLfloat r, GLfloat m) {
     return result;
 }
 
+void moveStars(Coord* coord, int n, GLfloat m, GLfloat d) {
+    for (int i=0; i<n; i++) {
+        coord[i].z+=d;
+        while (coord[i].z>m)
+            coord[i].z-=m;
+        while (coord[i].z<0.0)
+            coord[i].z+=m;
+    }
+}
+
 const char* vertex_shader =
 "#version 400\n"
 "in vec3 coord;"
@@ -45,9 +55,15 @@ int main() {
     glLinkProgram(shader_programme);
 
     const int n_stars = 5000;
-    Coord *stars = createStars(n_stars, 4.0, 10.0);
+    const GLfloat d = 10.0;
+    Coord *stars = createStars(n_stars, 4.0, d);
+    GLfloat speed = -0.1;
 
+    double then = 0.0;
     while (!glfwWindowShouldClose(window)) {
+        double now = glfwGetTime();
+        double deltaTime = now - then;
+        then = now;
         GLuint vbo = 0;
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -59,6 +75,7 @@ int main() {
         glDrawArrays(GL_POINTS, 0, n_stars);
         glDisableVertexAttribArray(0);
         glfwSwapBuffers(window);
+        moveStars(stars,n_stars, d, speed*deltaTime/0.2);
         glfwPollEvents();
     }
 
