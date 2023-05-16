@@ -46,7 +46,7 @@ const char* geometry_shader =
 "  gl_Position = gl_in[0].gl_Position;"
 "  vz = gl_Position.z;"
 "  EmitVertex();"
-"  gl_Position = gl_in[0].gl_Position + vec4(0.0, 0.0, -0.1*speed, 2.0*speed);"
+"  gl_Position = gl_in[0].gl_Position + vec4(0.0, 0.0, 0.1*speed, -2.0*speed);"
 "  vz = gl_Position.z;"
 "  EmitVertex();"
 "  EndPrimitive();"
