@@ -87,9 +87,9 @@ int main() {
     glAttachShader(shader_programme, gs);
     glLinkProgram(shader_programme);
 
-    const int n_stars = 5000;
+    const int n_stars = 8000;
     const GLfloat d = 10.0;
-    Coord *stars = createStars(n_stars, 4.0, d);
+    Coord *stars = createStars(n_stars, 6.0, d);
     GLfloat speed = -0.1;
 
     double then = 0.0;
