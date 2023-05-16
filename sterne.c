@@ -114,6 +114,12 @@ int main() {
         glfwSwapBuffers(window);
         moveStars(stars,n_stars, d, speed*deltaTime/0.2);
         glfwPollEvents();
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            break;
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            speed -= deltaTime/2.0;
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            speed += deltaTime/2.0;
     }
 
     glfwTerminate();
