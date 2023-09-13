@@ -1,8 +1,9 @@
+EXE = sterne
 CFLAGS = -O2
 LDFLAGS = -lglfw -lGL -lGLEW
 
-sterne:	sterne.c
-	$(CC) sterne.c $(CFLAGS) $(LDFLAGS) -o sterne
+$(EXE):	sterne.c
+	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 clean:
-	rm -f sterne
+	rm -f $(EXE)
